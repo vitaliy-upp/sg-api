@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\UserManagement\**" />
+    <EmbeddedResource Remove="Models\UserManagement\**" />
+    <None Remove="Models\UserManagement\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\_Common\Common.DataAccess\Common.DataAccess.Utilities.csproj" />
+    <ProjectReference Include="..\_Common\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\_Payment\Payment.DataAccess\Payment.DataAccess.csproj" />
+    <ProjectReference Include="..\_UserManagement\UserManagement.DataAccess\UserManagement.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

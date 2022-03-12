@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\_Common\Common.DataAccess\Common.DataAccess.Utilities.csproj" />
+    <ProjectReference Include="..\..\_Common\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\..\_Payment\Payment.DataAccess\Payment.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>
