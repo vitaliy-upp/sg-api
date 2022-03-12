@@ -1,0 +1,14 @@
+
+
+.vs/
+
+[Bb]in/
+[Oo]bj/
+[Pp]ackages/
+
+NoLimitTech.FrontEnd/
+
+# No Limit Technology Web API
+NoLimitTech.WebApi/wwwroot/images/users/
+NoLimitTech.WebApi/Properties/PublishProfiles/
+/NoLimitTech.Application/NoLimitTech.Application.csproj.user

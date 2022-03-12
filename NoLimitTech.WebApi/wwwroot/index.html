@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>JWT в ASP.NET Core Web API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <style>
+        ul {
+            list-style-type: circle;
+        }
+
+        .col div {
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body onload="BodyOnLoad()">
+    <div class="container">
+        <div class="row" id="row-sign-up-in">
+            <div class="col">
+                <div>
+                    <h2>Sign In</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="txtUsername">Email</label>
+                            <input class="form-control" type="text" name="txtUsername" id="username" placeholder="Email" />
+                        </div>
+                        <div class="form-group">
+                            <label for="txtPassword">Password</label>
+                            <input class="form-control" type="password" name="txtPassword" id="password" placeholder="Password" />
+                        </div>
+                        <input type="button" id="btnLogin" class="btn btn-primary" value="Login" onclick="Login(this.form)" />
+                    </form>
+                </div>
+                <hr />
+                <div>
+                    <h2>Sign In by Invite</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="txtInviteToken">Invite token</label>
+                            <input class="form-control" type="text" name="txtInviteToken" id="token" placeholder="Invite Token" />
+                        </div>
+                        <div class="form-group">
+                            <label for="txtUsername2">Email</label>
+                            <input class="form-control" type="text" name="txtUsername2" id="username" placeholder="Email" />
+                        </div>
+                        <input type="button" id="btnULogin" class="btn btn-primary" value="Login" onclick="ULogin(this.form)" />
+                    </form>
+                </div>
+            </div>
+            <div class="col">
+                <h2>Register New Account</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="txtFirstName">First Name</label>
+                        <input type="text" class="form-control" id="txtFirstName" placeholder="First Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtLastName">Last Name</label>
+                        <input type="text" class="form-control" id="txtLastName" placeholder="Last Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtEmail">Email</label>
+                        <input type="email" class="form-control" id="txtEmail" placeholder="Email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtPassword">Password</label>
+                        <input type="password" class="form-control" id="txtPassword" placeholder="Password" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtPhoneNumber">Phone number</label>
+                        <input type="text" class="form-control" id="txtPhoneNumber" placeholder="Phone Number" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtCompanyName">Company Name</label>
+                        <input type="text" class="form-control" id="txtCompanyName" placeholder="Company Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtRoleInCompany">Role In Company</label>
+                        <input type="text" class="form-control" id="txtRoleInCompany" placeholder="Role In Company" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtDescription">Description</label>
+                        <textarea type="text" class="form-control" id="txtDescription" placeholder="Description"></textarea>
+                    </div>
+                    <input type="button" id="btnRegister" class="btn btn-primary" value="Register" onclick="Register(this.form)" />
+                </form>
+            </div>
+        </div>
+        <div class="row" id="row-event-space">
+
+            <div class="col">
+                <div>
+                    <input type="text" id="txtEventId" placeholder="Event Id" />
+                    <input type="button" id="btnJoinToEvent" value="Join to Event" />
+                </div>
+                <hr />
+                <div>
+                    <input type="button" id="btnConnect" value="Connect to WebSocket" />
+                </div>
+                <hr />
+                <div>
+                    <input type="text" value="" id="txtFloorNum" placeholder="floor num" />
+                    <input type="button" id="btnGetOnFloor" value="Enter Floor" />
+                </div>
+                <hr />
+                <div>
+                    <input type="text" value="" id="txtDeskId" placeholder="desk id" />
+                    <input type="button" id="btnTakeASeat" value="Enter Desk" />
+                    <input type="button" id="btnGetUp" value="Leave Desk" />
+                </div>
+                <hr />
+                <div>
+                    <select id="select-floors" multiple="multiple">
+                    </select>
+                    <select id="select-speakers" multiple="multiple">
+                    </select> <br />
+                    <input type="button" id="btnStartPresent" value="Start Presentation" />
+                    <input type="button" id="btnEndPresent" value="End Presentation" />
+                </div>
+                <hr />
+                <div>
+                    <select id="msg-destination">
+                        <option value="">To Conference</option>
+                        <option value="toDeskId">To Desk</option>
+                        <option value="toUserId">To User</option>
+                    </select>
+                    <input type="text" value="" id="txtDestId" placeholder="Destination Id" />
+                    <textarea id="txtMessageArea" placeholder="Type message here"></textarea>
+                    <input type="button" id="btnSendMsg" value="Send message" />
+                </div>
+                <hr />
+                <div>
+                    <select id="user-settings-hidden">
+                        <option value="false">Visible</option>
+                        <option value="true">Hidden</option>
+                    </select>
+                    <input type="button" id="btnUserHidden" value="Show/Hide" />
+                </div>
+                <hr />
+                <div>
+                    <input type="text" id="txtActToId" placeholder="User Id to mute/kick/join" />
+                    <input type="button" id="btnJoin" value="Join" />
+                    <input type="button" id="btnKick" value="Kick" />
+                    <input type="button" id="btnMute" value="Mute" />
+                    <input type="button" id="btnBlock" value="Block" />
+                    <input type="button" id="btnUnblock" value="Unblock" />
+                </div>
+                <hr />
+                <div>
+                    <select id="event-space-sounds">
+                    </select>
+                    <input type="button" id="btnMakeNoise" value="Make Noise" />
+                </div>
+                <hr />
+                <div>
+                    <input type="button" id="btnBuyTicket" value="Buy Ticket" />
+                    <input type="button" id="btnBuySubscription" value="Buy Subscription" />
+                </div>
+                <hr />
+                <div class="col">
+                    <strong>Chat messages</strong>
+                    <div id="message-area"></div>
+                </div>
+            </div>
+            <div class="col-2">
+                <strong>floors</strong>
+                <ul id="ul-floors"></ul>
+            </div>
+            <div class="col-2">
+                <strong>desks</strong>
+                <ul id="ul-desks"></ul>
+            </div>
+            <div class="col-2">
+                <strong>users</strong>
+                <ul id="ul-users"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="js/site.js"></script>
+</body>
+</html>
