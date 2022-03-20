@@ -18,7 +18,7 @@ namespace PaymentStripe.EventHandlers
     {
         private readonly IUserCustomerRepository _userCustomerRepository;
         private readonly IStripeProductInfoRepository _stripeProductInfoRepository;
-        private readonly IUserDomainService _userDomainService;
+        private readonly IUserRepository _userDomainService;
         private readonly ISubscriptionPlanRepository _subscriptionPlanRepository;
         private readonly ICompanyRepository _companyRepository;
 
@@ -28,7 +28,7 @@ namespace PaymentStripe.EventHandlers
             IServiceProvider serviceProvider = HttpContextAccessor.HttpContext.RequestServices;
             _userCustomerRepository = serviceProvider.GetService(typeof(IUserCustomerRepository)) as IUserCustomerRepository;
             _stripeProductInfoRepository = serviceProvider.GetService(typeof(IStripeProductInfoRepository)) as IStripeProductInfoRepository;
-            _userDomainService = serviceProvider.GetService(typeof(IUserDomainService)) as IUserDomainService;
+            _userDomainService = serviceProvider.GetService(typeof(IUserRepository)) as IUserRepository;
             _subscriptionPlanRepository = serviceProvider.GetService(typeof(ISubscriptionPlanRepository)) as ISubscriptionPlanRepository;
             _companyRepository = serviceProvider.GetService(typeof(ICompanyRepository)) as ICompanyRepository;
         }
@@ -62,7 +62,7 @@ namespace PaymentStripe.EventHandlers
             }
             else
             {
-                ProvideSubscription(ucustomer.UserId, stripeProductInfo.SubscriptionPlanId.Value);
+                ProvideSubscriptionAsync(ucustomer.UserId, stripeProductInfo.SubscriptionPlanId.Value);
             }
         }
 
@@ -70,10 +70,10 @@ namespace PaymentStripe.EventHandlers
         #region PRIVATE METHODS
 
         
-        private void ProvideSubscription(int userId, int planId)
+        private async Task ProvideSubscriptionAsync(int userId, int planId)
         {
-            User user = _userDomainService.GetDetailedById(userId);
-            SubscriptionPlan subPlan = _subscriptionPlanRepository.GetById(planId);
+            User user = await _userDomainService.GetDetailedByIdAsync(userId);
+            SubscriptionPlan subPlan = await _subscriptionPlanRepository.GetByIdAsync(planId);
             user.Company.SubscriptionPlanId = subPlan.Id;
             //_companyRepository.Update(user.Company);
         }

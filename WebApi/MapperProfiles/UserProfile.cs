@@ -12,14 +12,14 @@ namespace NoLimitTech.WebApi.MapperProfiles
         {
             // USER
 
-            CreateMap<User, UserModel>()
+            CreateMap<User, UserDto>()
                 .ForMember(d => d.Role, o => o.MapFrom(s => s.UserRoles.FirstOrDefault().RoleId))
                 .ForMember(d => d.CompanyUrl, o => o.MapFrom(s => s.Company.Website));
 
             CreateMap<ExternalLink, SocialLinkDTO>();
             CreateMap<SocialLinkDTO, ExternalLink>();
 
-            CreateMap<UserModel, User>();
+            CreateMap<UserDto, User>();
 
             CreateMap<RegistrationModel, User>()
                 .ForMember(d => d.Password, opt => opt.Ignore());

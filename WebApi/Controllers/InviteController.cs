@@ -8,6 +8,7 @@ using Domain.BusinessLogic.Settings;
 using Domain.BusinessLogic.ServiceInterfaces;
 using Domain.DataAccess.Enums;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace NoLimitTech.WebApi.Controllers
 {
@@ -17,13 +18,13 @@ namespace NoLimitTech.WebApi.Controllers
     public class InviteController : ControllerBase
     {
         private readonly IInviteApplicationService _inviteApplicationService;
-        private readonly IUserApplicationService _userApplicationService;
+        private readonly IUserService _userApplicationService;
         private readonly ILogger<InviteController> _logger;
 
         private readonly JwtSettings _jwtSettings;
 
         public InviteController(IInviteApplicationService inviteApplicationService
-            , IUserApplicationService userApplicationService
+            , IUserService userApplicationService
             , IConfiguration configuration
             , ILogger<InviteController> logger)
         {
@@ -45,12 +46,14 @@ namespace NoLimitTech.WebApi.Controllers
         [ProducesResponseType(typeof(InviteModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status409Conflict)]
-        public IActionResult Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
             // checking if an invite exists
-            var invite = _inviteApplicationService.FindByToken(id);
+            var invite = await _inviteApplicationService.FindByTokenAsync(id);
             if (invite == null)
-            { return BadRequest(new ApiErrorResponse("Invite is not valid")); }
+            {
+                return BadRequest(new ApiErrorResponse("Invite is not valid")); 
+            }
 
             return Ok(invite);
         }

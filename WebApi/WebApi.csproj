@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\InviteController.cs" />
+    <Compile Remove="Controllers\SubscriptionPlanController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="nlog.config" />
   </ItemGroup>
 
@@ -42,6 +47,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain.BusinessLogic\Domain.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Domain.Repository\Domain.Repository.csproj" />
     <ProjectReference Include="..\_Common\MailSender\MailSender.csproj" />
   </ItemGroup>
 
@@ -55,7 +61,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <UserSecretsId>8c2f5e57-ced9-432b-8119-5ea7020bf0e2</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
   </PropertyGroup>
   
 </Project>

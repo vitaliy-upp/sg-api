@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Common.DataAccess.Utilities
 {
@@ -15,9 +16,9 @@ namespace Common.DataAccess.Utilities
 
         protected DbSet<TModel> DbSet => Context.Set<TModel>();
 
-        public virtual TModel GetById(TId id)
+        public virtual async Task<TModel> GetByIdAsync(TId id)
         {
-            return Context.Set<TModel>().Find(id);
+            return await Context.Set<TModel>().FindAsync(id);
         }
 
         public virtual IList<TModel> GetByIds(IList<TId> ids)
@@ -40,68 +41,71 @@ namespace Common.DataAccess.Utilities
             return model;
         }
 
-        public virtual TModel Update(TModel updated)
+        public virtual async Task<TModel> UpdateAsync(TModel updated)
         {
             if (updated == null)
             {
                 return null;
             }
 
-            var existing = GetById(updated.Id);
+            var existing = await GetByIdAsync(updated.Id);
             if (existing != null)
             {
                 Context.Entry(existing).CurrentValues.SetValues(updated);
-                SaveChanges();
+                await SaveChangesAsync();
             }
 
             return existing;
         }
 
-        public virtual TModel UpdateOrAdd(TModel model)
+        //public virtual TModel UpdateOrAdd(TModel model)
+        //{
+        //    if (model == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    var existing = await GetByIdAsync(model.Id);
+
+        //    if (existing != null)
+        //        Context.Entry(existing).CurrentValues.SetValues(model);
+        //    else
+        //        Context.Set<TModel>().Add(model);
+
+        //    SaveChanges();
+
+
+        //    return existing;
+        //}
+
+
+        public virtual async Task DeleteAsync(TId id)
         {
-            if (model == null)
-            {
-                return null;
-            }
-
-            var existing = GetById(model.Id);
-
-            if (existing != null)
-                Context.Entry(existing).CurrentValues.SetValues(model);
-            else
-                Context.Set<TModel>().Add(model);
-
-            SaveChanges();
-
-
-            return existing;
-        }
-
-
-        public virtual void Delete(TId id)
-        {
-            var entity = GetById(id);
+            var entity = await GetByIdAsync(id);
             DbSet.Remove(entity);
-            SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public virtual void Delete(IList<TId> ids)
+        //TODO: optimize the # of calls the DB.
+        public virtual async Task DeleteAsync(IList<TId> ids)
         {
             foreach (var id in ids)
             {
-                var entity = GetById(id);
+                var entity = await GetByIdAsync(id);
                 DbSet.Remove(entity);
             }
 
-            SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public virtual void Delete(TModel model)
+        public virtual async Task DeleteAsync(TModel model)
         {
             Context.Set<TModel>().Remove(model);
             SaveChanges();
         }
 
         public virtual void SaveChanges() => Context.SaveChanges();
+        public virtual async Task SaveChangesAsync() => await Context.SaveChangesAsync();
+
     }
 }

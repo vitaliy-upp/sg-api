@@ -14,6 +14,7 @@ using Domain.BusinessLogic.Models.User;
 using MailSender.Interfaces;
 using MailSender.TemplateDataObjects;
 using Domain.DataAccess.Enums;
+using System.Net;
 
 namespace NoLimitTech.WebApi.Controllers
 {
@@ -21,21 +22,21 @@ namespace NoLimitTech.WebApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IUserApplicationService _userApplicationService;
+        private readonly IUserService _userApplicationService;
         private readonly IInviteApplicationService _inviteApplicationService;
         private readonly IEmailSenderService _emailSenderService;
         private readonly IUserTokensApplicationService _userTokensApplicationService;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
-        private readonly IAppUrlProviderApplicationService _appUrlProviderApplicationService;
+        private readonly IAppUrlProvider _appUrlProvider;
 
         private readonly JwtSettings _jwtSettings;
         private readonly BlobStorageSettings _blobStorageSettings;
         private readonly EmailProviderSettings _emailProviderSettings;
 
         public AccountController(IConfiguration configuration
-            , IAppUrlProviderApplicationService appUrlProviderApplicationService
-            , IUserApplicationService userApplicationService
+            , IAppUrlProvider appUrlProviderApplicationService
+            , IUserService userApplicationService
             , IInviteApplicationService inviteApplicationService
             , IEmailSenderService emailSenderService
             , IUserTokensApplicationService userTokensApplicationService
@@ -48,7 +49,7 @@ namespace NoLimitTech.WebApi.Controllers
             _emailSenderService = emailSenderService;
             _logger = logger;
             _mapper = mapper;
-            _appUrlProviderApplicationService = appUrlProviderApplicationService;
+            _appUrlProvider = appUrlProviderApplicationService;
 
             _jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
             _blobStorageSettings = configuration.GetSection(nameof(BlobStorageSettings)).Get<BlobStorageSettings>();
@@ -66,13 +67,11 @@ namespace NoLimitTech.WebApi.Controllers
         [HttpPost("token")]
         [ProducesResponseType(typeof(TokenResponseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
-        public IActionResult Token([FromBody] LoginModel model)
+        public async Task<IActionResult> Token([FromBody] LoginModel model)
         {
-            var userModel = AuthenticateUser(model);
-            if (userModel == null)
-            {
-                return NotFound(new ApiErrorResponse("Invalid username or password."));
-            }
+            if (model == null) return null;
+
+            var userModel = await _userApplicationService.GetByLoginPasswordAsync(model.Username, model.Password);
 
             string jwtToken = JwtTokenUtils.GenerateJwtToken(userModel.Email, userModel.Role, true, false, _jwtSettings);
 
@@ -80,34 +79,7 @@ namespace NoLimitTech.WebApi.Controllers
         }
 
         /// <summary>
-        /// Getting an access token for unregistered users by event token
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("uToken")]
-        [ProducesResponseType(typeof(uTokenResponseModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UnregisteredToken([FromForm] ULoginModel model)
-        {
-            try
-            {
-
-                //bool isRegistered = _userApplicationService.IsRegistered();
-                //string jwtToken = JwtTokenUtils.GenerateJwtToken(eventUser.Invite.UserEmail, UserRolesEnum.User, isRegistered, true, _jwtSettings);
-
-                //var eventUserModel = _mapper.Map<EventUserModel>(eventUser);
-
-                return Ok(new uTokenResponseModel());
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                return BadRequest(new ApiErrorResponse(ex.Message));
-            }
-        }
-
-        /// <summary>
-        /// Registration of user
+        /// Registration of a user
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Success</returns>
@@ -118,23 +90,28 @@ namespace NoLimitTech.WebApi.Controllers
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromForm] RegistrationModel model)
         {
-            if (_userApplicationService.IfExists(model.Email))
-            { return BadRequest(new ApiErrorResponse("A user with this email address already exists")); }
+            var isAvailable = await _userApplicationService.CheckEmailAvailabilityAsync(model.Email);
+            if (!isAvailable)
+            {
+                return BadRequest(new ApiErrorResponse("A user with this email address already exists"));
+            }
 
             try
             {
                 // Creating new user
-                UserModel userModel = await _userApplicationService.CreateAsync(model);
+                UserDto userModel = await _userApplicationService.CreateAsync(model);
 
                 // generate email verification token key
-                UserTokenModel tokenModel = _userTokensApplicationService.CreateEmailVerificationToken(userModel.Id);
+                UserTokenDto tokenModel = await _userTokensApplicationService.CreateEmailVerificationTokenAsync(userModel.Id);
+                var confirmationLink = _appUrlProvider.EmailActivationLink(tokenModel.TokenKey);
 
                 SignUpConfirmationMailData mailData = new SignUpConfirmationMailData()
                 {
                     UserEmail = userModel.Email,
                     UserName = userModel.FullName,
-                    ConfirmationLink = _appUrlProviderApplicationService.EmailActivationLink(tokenModel.TokenKey)
+                    ConfirmationLink = confirmationLink
                 };
+
                 // sending email
                 await _emailSenderService.SendTemplateEmailAsync(_emailProviderSettings.From, _emailProviderSettings.NameFrom,
                     userModel.Email, userModel.FullName, _emailProviderSettings.SignUpConfirmationTId, mailData);
@@ -159,11 +136,13 @@ namespace NoLimitTech.WebApi.Controllers
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RegisterByToken([FromForm] URegistrationModel model)
         {
-            var invite = _inviteApplicationService.FindByToken(model.InviteKey);
+            var invite = await _inviteApplicationService.FindByTokenAsync(model.InviteKey);
             if (invite == null)
-            { return NotFound(new ApiErrorResponse("Invite was not found")); }
+            {
+                return NotFound(new ApiErrorResponse("Invite was not found"));
+            }
 
-            UserModel userModel;
+            UserDto userModel;
             try
             {
                 // Creating new user
@@ -189,21 +168,25 @@ namespace NoLimitTech.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
-        public IActionResult Activate([FromBody] ActivationModel model)
+        public async Task<IActionResult> Activate([FromBody] ActivationModel model)
         {
-            var tokenModel = _userTokensApplicationService.Find(model.Token);
+            var tokenModel = await _userTokensApplicationService.FindAsync(model.Token);
             if (tokenModel == null)
-            { return NotFound(new ApiErrorResponse("Token is not valid")); }
+            { 
+                return NotFound(new ApiErrorResponse("Token is not valid"));
+            }
 
             // TODO: maybe should set expired date of the token to today
-            var userModel = _userApplicationService.FindById(tokenModel.UserId);
+            var userModel = await _userApplicationService.GetByIdAsync(tokenModel.UserId);
             if (userModel == null)
-            { return NotFound(new ApiErrorResponse("User was not found")); }
+            { 
+                return NotFound(new ApiErrorResponse("User was not found")); 
+            }
 
             try
             {
                 // confirming an email
-                _userApplicationService.ConfirmEmail(userModel.Id);
+                await _userApplicationService.ConfirmEmailAsync(userModel.Id);
             }
             catch (Exception ex)
             {
@@ -221,22 +204,11 @@ namespace NoLimitTech.WebApi.Controllers
         /// <returns></returns>
         [HttpPost("check/email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult ValidateEmail([FromBody] EmailDTO model)
+        public async Task<IActionResult> ValidateEmail([FromBody] EmailDTO model)
         {
-            bool exists = _userApplicationService.IfExists(model.Email);
-            return Ok(new { status = exists });
+            bool isAvailabe = await _userApplicationService.CheckEmailAvailabilityAsync(model.Email);
+            return Ok(new { status = !isAvailabe });
         }
 
-        #region PRIVATE METHODS
-
-        private UserModel AuthenticateUser(LoginModel model)
-        {
-            if (model == null) return null;
-
-            var person = _userApplicationService.FindByLoginPassword(model.Username, model.Password);
-            return person;
-        }
-
-        #endregion
     }
 }

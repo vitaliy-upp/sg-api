@@ -9,7 +9,7 @@ namespace NoLimitTech.WebApi.MapperProfiles
     {
         public UserTokenProfile()
         {
-            CreateMap<UserToken, UserTokenModel>()
+            CreateMap<UserToken, UserTokenDto>()
                 .ReverseMap();
         }
     }

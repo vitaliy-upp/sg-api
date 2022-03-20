@@ -13,7 +13,7 @@ namespace PaymentStripe.EventHandlers
     [EventType(Type = Events.CustomerSubscriptionUpdated)]
     public class CustomerSubscriptionUpdatedEventHandler : BaseStripeEventHandler<Subscription>
     {
-        private readonly IUserDomainService _userDomainService;
+        private readonly IUserRepository _userDomainService;
         private readonly ISubscriptionPlanRepository _subscriptionPlanRepository;
         private readonly IUserCustomerRepository _userCustomerRepository;
         private readonly ICompanyRepository _companyRepository;
@@ -23,7 +23,7 @@ namespace PaymentStripe.EventHandlers
             : base(stripeEvent, httpContextAccessor)
         {
             IServiceProvider serviceProvider = HttpContextAccessor.HttpContext.RequestServices;
-            _userDomainService = serviceProvider.GetService(typeof(IUserDomainService)) as IUserDomainService;
+            _userDomainService = serviceProvider.GetService(typeof(IUserRepository)) as IUserRepository;
             _subscriptionPlanRepository = serviceProvider.GetService(typeof(ISubscriptionPlanRepository)) as ISubscriptionPlanRepository;
             _userCustomerRepository = serviceProvider.GetService(typeof(IUserCustomerRepository)) as IUserCustomerRepository;
             _companyRepository = serviceProvider.GetService(typeof(ICompanyRepository)) as ICompanyRepository;
@@ -35,7 +35,7 @@ namespace PaymentStripe.EventHandlers
             await base.HandleAsync();
 
             UserCustomer userCustomer = _userCustomerRepository.GetByCustomerId(DataObj.CustomerId);
-            User user = _userDomainService.GetDetailedById(userCustomer.UserId);
+            User user =await _userDomainService.GetDetailedByIdAsync(userCustomer.UserId);
             StripeProductInfo stripeProductInfo = _stripeProductInfoRepository.GetByPriceId(DataObj.Items.Data[0].Price.Id);
             //SubscriptionPlan subPlan = _subscriptionPlanRepository.GetById(stripeProductInfo.SubscriptionPlanId.Value);
             //user.Company.SubscriptionPlanId = subPlan.Id;

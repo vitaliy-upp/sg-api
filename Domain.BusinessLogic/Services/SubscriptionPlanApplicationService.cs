@@ -9,7 +9,7 @@ using Domain.DataAccess.Models;
 
 namespace Domain.BusinessLogic.Services
 {
-    public class SubscriptionPlanApplicationService : BaseApplicationService, ISubscriptionPlanApplicationService
+    public class SubscriptionPlanApplicationService : BaseBusinessService, ISubscriptionPlanApplicationService
     {
         private readonly ISubscriptionPlanRepository _subscriptionPlanRepository;
         private readonly ICompanyRepository _сompanyRepository;
@@ -70,7 +70,7 @@ namespace Domain.BusinessLogic.Services
         // For Testing
         public SubscriptionPlanDTO FindById(int id)
         {
-            var dbSubscr = _subscriptionPlanRepository.GetById(id);
+            var dbSubscr = _subscriptionPlanRepository.GetByIdAsync(id);
             return _mapper.Map<SubscriptionPlanDTO>(dbSubscr);
         }
         public StripeProductInfo GetStripeProdInfo(int planId)

@@ -19,7 +19,7 @@ namespace NoLimitTech.WebApi.Controllers
     [ApiController]
     public class PasswordController : ControllerBase
     {
-        private readonly IUserApplicationService _userApplicationService;
+        private readonly IUserService _userApplicationService;
         private readonly IUserTokensApplicationService _userTokensApplicationService;
         private readonly IEmailSenderService _emailSenderService;
         private readonly ILogger<PasswordController> _logger;
@@ -27,7 +27,7 @@ namespace NoLimitTech.WebApi.Controllers
         private readonly ClientSideSettings _clientSideSettings;
         private readonly EmailProviderSettings _emailProviderSettings;
 
-        public PasswordController(IUserApplicationService userApplicationService
+        public PasswordController(IUserService userApplicationService
             , IUserTokensApplicationService userTokensApplicationService
             , IEmailSenderService emailSenderService
             , IConfiguration configuration
@@ -51,12 +51,12 @@ namespace NoLimitTech.WebApi.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
-        public IActionResult Put([FromBody] ChangePasswordModel model)
+        public async Task<IActionResult> Put([FromBody] ChangePasswordModel model)
         {
-            var userModel = _userApplicationService.FindByIdentity(User.Identity);
+            var userModel = await _userApplicationService.GetUserByIdentityAsync(User.Identity);
             try
             {
-                _userApplicationService.ChangePassword(userModel.Id, model.OldPassword, model.NewPassword);
+                await _userApplicationService.ChangePasswordAsync(userModel.Id, model.OldPassword, model.NewPassword);
             }
             catch (Exception ex)
             {
@@ -77,13 +77,13 @@ namespace NoLimitTech.WebApi.Controllers
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RequesResetPassword(RequestResetPasswordModel model)
         {
-            UserModel user = _userApplicationService.FindByEmail(model.Email);
+            UserDto user = await _userApplicationService.GetByEmailAsync(model.Email);
             if(user == null)
             { return NotFound(new ApiErrorResponse("User with specified email was not found.")); }
 
             try
             {
-                UserTokenModel userTokenModel = _userTokensApplicationService.CreateResetPasswordToken(user.Id, 1);
+                UserTokenDto userTokenModel = _userTokensApplicationService.CreateResetPasswordToken(user.Id, 1);
 
                 ResetPasswordMailData mailData = new ResetPasswordMailData()
                 {
@@ -112,15 +112,15 @@ namespace NoLimitTech.WebApi.Controllers
         [HttpPut("reset")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
-        public IActionResult ResetPassword(ResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
-            UserTokenModel tokenModel = _userTokensApplicationService.Find(model.ResetToken);
+            UserTokenDto tokenModel = await _userTokensApplicationService.FindAsync(model.ResetToken);
             if (tokenModel == null || tokenModel.ExpiredDate < DateTime.Now)
             { return BadRequest(new ApiErrorResponse("Token is not valid")); }
 
             try
             {
-                _userApplicationService.ChangePassword(tokenModel.UserId, model.NewPassword);
+                await _userApplicationService.ChangePasswordAsync(tokenModel.UserId, model.NewPassword);
             }
             catch (Exception ex)
             {

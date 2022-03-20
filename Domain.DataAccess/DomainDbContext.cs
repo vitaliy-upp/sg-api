@@ -7,6 +7,9 @@ using Domain.DataAccess.Models;
 using Payment.DataAccess.Enitities;
 using System.IO;
 using System.Linq;
+using Domain.DataAccess.Entities.KidProfile;
+using Domain.DataAccess.Entities.KidProfile.Education;
+using UserManagement.DataAccess.UserManagement.Location;
 
 namespace Domain.DataAccess
 {
@@ -17,7 +20,6 @@ namespace Domain.DataAccess
 
         public DbSet<UserToken> UserTokens { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<UserRoles> UserRoles { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Feature> Features { get; set; }
@@ -30,7 +32,12 @@ namespace Domain.DataAccess
         public DbSet<MessageAttachment> MessageAttachments { get; set; }
         public DbSet<UserCustomer> UserCustomers { get; set; }
         public DbSet<StripeProductInfo> StripeProductsInfo { get; set; }
-
+        public DbSet<KidProfile> KidProfiles { get; set; }
+        public DbSet<SuperPower> SuperPowers { get; set; }
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Region> Regions { get; set; }
+        public DbSet<Country> Countries { get; set; }
 
         public DomainDbContext(DbContextOptions<DomainDbContext> options)
             : base(options)
@@ -50,28 +57,31 @@ namespace Domain.DataAccess
             #region Apply Configurations
 
             builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new RoleConfiguration());
-            builder.ApplyConfiguration(new UserRolesConfiguration());
+            builder.ApplyConfiguration(new SuperPowerConfiguration());
             builder.ApplyConfiguration(new FeatureConfiguration());
             builder.ApplyConfiguration(new SubscriptionFeatureConfiguration());
             builder.ApplyConfiguration(new SubscriptionPlanConfiguration());
 
-
             #endregion
 
+
+
             #region Relationships
+            
+            builder.Entity<SuperPowerToKid>()
+                .HasKey(p => new
+                {
+                    p.KidId,
+                    p.SuperPowerId
+                });
 
             builder.Entity<UserRoles>()
                   .HasKey(ur => new { ur.UserId, ur.RoleId });
+            
             builder.Entity<UserRoles>()
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(u => u.UserId);
-            builder.Entity<UserRoles>()
-                .HasOne(ur => ur.Role)
-                .WithMany(r => r.UserRoles)
-                .HasForeignKey(r => r.RoleId);
-
 
             builder.Entity<SubscriptionFeature>()
                 .HasOne(f => f.SubscriptionPlan)
@@ -98,7 +108,7 @@ namespace Domain.DataAccess
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(@Directory.GetCurrentDirectory() + "/../NoLimitTech.WebApi/appsettings.json").Build();
+                .AddJsonFile(@Directory.GetCurrentDirectory() + "/../WebApi/appsettings.json").Build();
             var builder = new DbContextOptionsBuilder<DomainDbContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             builder.UseSqlServer(connectionString);

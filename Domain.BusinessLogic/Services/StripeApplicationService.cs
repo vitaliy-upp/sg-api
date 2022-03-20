@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Domain.BusinessLogic.Services
 {
-    public class StripeApplicationService : BaseApplicationService, IStripeApplicationService
+    public class StripeApplicationService : BaseBusinessService, IStripeApplicationService
     {
         private readonly IUserDomainService _userDomainService;
         private readonly ILogger<StripeApplicationService> _logger;

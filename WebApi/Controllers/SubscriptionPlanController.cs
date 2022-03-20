@@ -18,13 +18,13 @@ namespace NoLimitTech.WebApi.Controllers
     {
         private readonly ILogger<SubscriptionPlanController> _logger;
         private readonly ISubscriptionPlanApplicationService _subscriptionPlanApplicationService;
-        private readonly IUserApplicationService _userApplicationService;
+        private readonly IUserService _userApplicationService;
 
         private readonly IMapper _mapper;
 
         public SubscriptionPlanController(ILogger<SubscriptionPlanController> logger
             , ISubscriptionPlanApplicationService subscriptionPlanApplicationService
-            , IUserApplicationService userApplicationService
+            , IUserService userApplicationService
             , IMapper mapper)
         {
             _logger = logger;

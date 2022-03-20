@@ -12,13 +12,13 @@ namespace NoLimitTech.WebApi.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        private readonly IUserApplicationService _userApplicationService;
+        private readonly IUserService _userApplicationService;
         private readonly ILogger<ImagesController> _logger;
 
         private readonly ImageSettings _imageSettings;
         private readonly BlobStorageSettings _blobStorageSettings;
 
-        public ImagesController(IUserApplicationService userApplicationService
+        public ImagesController(IUserService userApplicationService
             , IConfiguration configuration
             , ILogger<ImagesController> logger)
         {

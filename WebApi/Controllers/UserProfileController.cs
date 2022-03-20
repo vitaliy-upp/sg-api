@@ -16,11 +16,11 @@ namespace NoLimitTech.WebApi.Controllers
     [ApiController]
     public class UserProfileController : ControllerBase
     {
-        private readonly IUserApplicationService _userApplicationService;
+        private readonly IUserService _userApplicationService;
         private readonly ILogger<UserProfileController> _logger;
 
 
-        public UserProfileController(IUserApplicationService userApplicationService
+        public UserProfileController(IUserService userApplicationService
             , ILogger<UserProfileController> logger)
         {
             _userApplicationService = userApplicationService;
@@ -33,11 +33,11 @@ namespace NoLimitTech.WebApi.Controllers
         /// </summary>
         /// <returns>User Model</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
-        public UserModel Get()
+        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Get()
         {
-            var userModel = _userApplicationService.GetUserProfileByIdentity(User.Identity);
-            return userModel;
+            var userModel = await _userApplicationService.GetUserByIdentityAsync(User.Identity);
+            return Ok(userModel);
         }
 
         /// <summary>
@@ -45,11 +45,10 @@ namespace NoLimitTech.WebApi.Controllers
         /// </summary>
         /// <param name="model">Update User Model</param>
         [HttpPut]
-        [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put([FromForm] UpdateUserModel model)
         {
-            //var userModel = _userApplicationService.FindByIdentity(User.Identity);
             var userEmail = (User.Identity as ClaimsIdentity).GetValueByClaimType(ClaimTypes.Email);
             try
             {

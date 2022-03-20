@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\UserManagement\**" />
-    <EmbeddedResource Remove="Models\UserManagement\**" />
-    <None Remove="Models\UserManagement\**" />
+    <Compile Remove="Entities\UserManagement\**" />
+    <EmbeddedResource Remove="Entities\UserManagement\**" />
+    <None Remove="Entities\UserManagement\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +26,11 @@
     <ProjectReference Include="..\_Common\Utilities\Utilities.csproj" />
     <ProjectReference Include="..\_Payment\Payment.DataAccess\Payment.DataAccess.csproj" />
     <ProjectReference Include="..\_UserManagement\UserManagement.DataAccess\UserManagement.DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\Advisor\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
