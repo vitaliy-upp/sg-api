@@ -16,6 +16,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Domain.DataAccess.Services;
 using System.Collections.Generic;
+using FileManagement.DataAccess;
 
 namespace Domain.BusinessLogic.Services
 {
@@ -268,7 +269,7 @@ namespace Domain.BusinessLogic.Services
             {
                 var links = _socialLinkRepository.GetForUser(userId);
                 await _socialLinkRepository.DeleteAsync(links.Select(sl => sl.Id).ToList());
-                var list = updateUser.SocialLinks.Select((sl) => new ExternalLink()
+                var list = updateUser.SocialLinks.Select((sl) => new Attachment()
                 {
                     Name = sl.Name,
                     Url = sl.Link

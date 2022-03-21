@@ -36,6 +36,7 @@ namespace WebApi
             services.AddTransient<IFeatureRepository, FeatureRepository>();
             services.AddTransient<IKidProfileRepository, KidProfileRepository>();
             services.AddTransient<ISuperPowerRepository, SuperPowerRepository>();
+            services.AddTransient<IKidEducationRepository, KidEducationRepository>();
 
 
             // Application services
@@ -50,6 +51,8 @@ namespace WebApi
             services.AddTransient<IAppUrlProvider, AppUrlProvider>();
             services.AddTransient<IKidProfileService, KidProfileService>();
             services.AddTransient<ISuperPowerService, SuperPowerService>();
+            services.AddTransient<IKidEducationService, KidEducationService>();
+
 
             // Email service
             services.AddTransient<IEmailSenderService, EmailSenderService>();

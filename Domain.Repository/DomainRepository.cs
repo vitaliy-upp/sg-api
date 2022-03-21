@@ -53,7 +53,7 @@ namespace Domain.Repository
             return model;
         }
 
-        public virtual async Task<TModel> UpdateAsync(TModel updated)
+        public virtual async Task<TModel> UpdateAsync(TModel updated, bool? shouldSaveChanges = false)
         {
             if (updated == null)
             {
@@ -68,6 +68,10 @@ namespace Domain.Repository
             //    Context.Entry(existing).CurrentValues.SetValues(updated);
             //    //SaveChanges();
             //}
+            if (shouldSaveChanges.HasValue && shouldSaveChanges.Value)
+            {
+                await SaveChangesAsync();
+            }
 
             return updated;
         }

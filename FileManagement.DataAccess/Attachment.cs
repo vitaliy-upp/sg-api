@@ -1,18 +1,18 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Common.DataAccess.Utilities;
-using Domain.DataAccess.Entities.KidProfile;
 
-namespace DataAccess.UserManagement
+namespace FileManagement.DataAccess
 {
-    public class Attachment : IBaseDomainModel<int>
+    public class Attachment : IBaseDomainModel<int>, ICreatedDate
     {
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }
-        public string Type { get; set; }
+        public AttachmentTypeEnum Type { get; set; }
+        public string MimeType { get; set; }
         public DateTime CreatedDate { get; set; }
-        public int CreatedByUserId { get; set; }
+        public int UserId { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Domain.DataAccess.Services;
 using Domain.DataAccess.Entities.KidProfile;
 using System.Collections.Generic;
+using FileManagement.DataAccess;
 
 namespace Domain.BusinessLogic.Services
 {
@@ -112,7 +113,7 @@ namespace Domain.BusinessLogic.Services
             {
                 var links = _socialLinkRepository.GetForUser(userId);
                 await _socialLinkRepository.DeleteAsync(links.Select(sl => sl.Id).ToList());
-                var list = updateUser.SocialLinks.Select((sl) => new ExternalLink()
+                var list = updateUser.SocialLinks.Select((sl) => new Attachment()
                 {
                     Name = sl.Name,
                     Url = sl.Link
@@ -121,13 +122,13 @@ namespace Domain.BusinessLogic.Services
             }
         }
 
-        public async Task<IList<KidProfileDto>> FindByParentIdAsync(int parentId)
+        public async Task<IList<KidProfileDto>> GetByParentIdAsync(int parentId)
         {
             var list = await _kidProfileRepository.GetByParentId(parentId);
             return list.Select(t => _mapper.Map<KidProfileDto>(t)).ToList();
         }
 
-        public async Task<KidProfileDto> FindByIdAsync(int id)
+        public async Task<KidProfileDto> GetByIdAsync(int id)
         {
             var item = await _kidProfileRepository.GetByIdAsync(id);
             var result = _mapper.Map<KidProfileDto>(item);

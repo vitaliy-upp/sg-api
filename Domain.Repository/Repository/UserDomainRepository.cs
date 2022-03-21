@@ -63,7 +63,7 @@ namespace Domain.DataAccess.Services
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-        public override async Task<User> UpdateAsync(User updated)
+        public override async Task<User> UpdateAsync(User updated, bool? shouldBeUpdated = false)
         {
             if (updated == null)
             {
@@ -75,7 +75,10 @@ namespace Domain.DataAccess.Services
             if (existing != null)
             {
                 Context.Entry(existing).CurrentValues.SetValues(updated);
-                SaveChanges();
+                if (shouldBeUpdated.HasValue && shouldBeUpdated.Value)
+                {
+                    await SaveChangesAsync();
+                }
             }
 
             return existing;

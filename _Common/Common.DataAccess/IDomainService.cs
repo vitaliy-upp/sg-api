@@ -9,7 +9,7 @@ namespace Common.DataAccess.Utilities
         IList<TModel> GetByIds(IList<TId> ids);
         int GetCount();
         TModel Create(TModel model);
-        Task<TModel> UpdateAsync(TModel updated);
+        Task<TModel> UpdateAsync(TModel updated, bool? shouldBeSaved = false );
         //TModel UpdateOrAdd(TModel updated);
         Task DeleteAsync(TId id);
         Task DeleteAsync(IList<TId> ids);

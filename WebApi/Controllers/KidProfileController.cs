@@ -40,7 +40,7 @@ namespace NoLimitTech.WebApi.Controllers
         public async Task<IActionResult> Get()
         {
             var user = await _userApplicationService.GetUserByIdentityAsync(User.Identity);
-            var list =  await _kidProfileService.FindByParentIdAsync(user.Id);
+            var list =  await _kidProfileService.GetByParentIdAsync(user.Id);
             return Ok(list);
         }
 
@@ -53,7 +53,7 @@ namespace NoLimitTech.WebApi.Controllers
         [ProducesResponseType(typeof(KidProfileDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromRoute]int id)
         {
-            var result = await _kidProfileService.FindByIdAsync(id);
+            var result = await _kidProfileService.GetByIdAsync(id);
             return Ok(result);
         }
 

@@ -17,15 +17,15 @@ namespace NoLimitTech.WebApi.Controllers
     [ApiController]
     public class SuperPowerController : ControllerBase
     {
-        private readonly ILogger<KidProfileController> _logger;
-        private readonly ISuperPowerService _superPowerServicee;
+        private readonly ILogger<SuperPowerController> _logger;
+        private readonly ISuperPowerService _superPowerService;
 
         public SuperPowerController(
-             ILogger<KidProfileController> logger
+             ILogger<SuperPowerController> logger
             , ISuperPowerService superPowerServicee)
         {
             _logger = logger;
-            _superPowerServicee = superPowerServicee;
+            _superPowerService = superPowerServicee;
         }
 
 
@@ -37,7 +37,7 @@ namespace NoLimitTech.WebApi.Controllers
         [ProducesResponseType(typeof(IEnumerable<SuperPowerDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
-            var list = await _superPowerServicee.GetAllAsync();
+            var list = await _superPowerService.GetAllAsync();
             return Ok(list);
         }
     }

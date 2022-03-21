@@ -1,4 +1,4 @@
-﻿namespace Domain.BusinessLogic.Settings
+﻿namespace FileManagement.Utilities.AzureBlob
 {
     public class BlobStorageSettings
     {

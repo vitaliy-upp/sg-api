@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Domain.BusinessLogic.Settings;
 using Domain.BusinessLogic.ServiceInterfaces;
+using FileManagement.Utilities.AzureBlob;
 
 namespace NoLimitTech.WebApi.Controllers
 {

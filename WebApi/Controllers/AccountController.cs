@@ -15,6 +15,7 @@ using MailSender.Interfaces;
 using MailSender.TemplateDataObjects;
 using Domain.DataAccess.Enums;
 using System.Net;
+using FileManagement.Utilities.AzureBlob;
 
 namespace NoLimitTech.WebApi.Controllers
 {

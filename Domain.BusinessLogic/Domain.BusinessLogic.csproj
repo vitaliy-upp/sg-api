@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain.DataAccess\Domain.DataAccess.csproj" />
+    <ProjectReference Include="..\FileManagement.Utilities\FileManagement.Utilities.csproj" />
     <ProjectReference Include="..\_Common\MailSender\MailSender.csproj" />
     <ProjectReference Include="..\_Payment\Payment.DataAccess\Payment.DataAccess.csproj" />
     <ProjectReference Include="..\_Payment\PaymentStripe\PaymentStripe.csproj" />

@@ -41,7 +41,7 @@ namespace Common.DataAccess.Utilities
             return model;
         }
 
-        public virtual async Task<TModel> UpdateAsync(TModel updated)
+        public virtual async Task<TModel> UpdateAsync(TModel updated, bool? shouldBeSaved = false)
         {
             if (updated == null)
             {
@@ -52,7 +52,10 @@ namespace Common.DataAccess.Utilities
             if (existing != null)
             {
                 Context.Entry(existing).CurrentValues.SetValues(updated);
-                await SaveChangesAsync();
+                if (shouldBeSaved.HasValue && shouldBeSaved.Value)
+                {
+                    await SaveChangesAsync();
+                }
             }
 
             return existing;

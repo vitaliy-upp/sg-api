@@ -12,7 +12,7 @@ namespace Domain.Repository
         int GetCount();
         TModel Create(TModel model);
         Task<TModel> CreateAsync(TModel model, bool? shouldSaveChanges = false);
-        Task<TModel> UpdateAsync(TModel updated);
+        Task<TModel> UpdateAsync(TModel updated, bool? shouldSaveChanges = false);
         //TModel UpdateOrAdd(TModel updated);
         Task DeleteAsync(TId id);
         Task DeleteAsync(IList<TId> ids);

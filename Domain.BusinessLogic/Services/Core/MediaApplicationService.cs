@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using FileManagement.Utilities.AzureBlob;
 
 namespace Domain.BusinessLogic.Services
 {

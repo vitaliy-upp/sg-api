@@ -8,14 +8,14 @@ namespace Domain.BusinessLogic.ServiceInterfaces
 {
     public interface IKidProfileService : IBaseBusinessService
     {
-        Task<IList<KidProfileDto>> FindByParentIdAsync(int parentId);
+        Task<IList<KidProfileDto>> GetByParentIdAsync(int parentId);
 
         /// <summary>
         /// Find kid profile by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<KidProfileDto> FindByIdAsync(int id);
+        Task<KidProfileDto> GetByIdAsync(int id);
 
         /// <summary>
         /// Create new Kid Profile

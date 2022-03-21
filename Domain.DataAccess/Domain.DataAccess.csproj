@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FileManagement.DataAccess\FileManagement.DataAccess.csproj" />
     <ProjectReference Include="..\_Common\Common.DataAccess\Common.DataAccess.Utilities.csproj" />
     <ProjectReference Include="..\_Common\Utilities\Utilities.csproj" />
     <ProjectReference Include="..\_Payment\Payment.DataAccess\Payment.DataAccess.csproj" />

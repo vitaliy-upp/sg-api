@@ -2,6 +2,7 @@
 using DataAccess.UserManagement;
 using Domain.BusinessLogic.Models;
 using Domain.DataAccess.Models;
+using FileManagement.DataAccess;
 using System.Linq;
 
 namespace NoLimitTech.WebApi.MapperProfiles
@@ -16,8 +17,8 @@ namespace NoLimitTech.WebApi.MapperProfiles
                 .ForMember(d => d.Role, o => o.MapFrom(s => s.UserRoles.FirstOrDefault().RoleId))
                 .ForMember(d => d.CompanyUrl, o => o.MapFrom(s => s.Company.Website));
 
-            CreateMap<ExternalLink, SocialLinkDTO>();
-            CreateMap<SocialLinkDTO, ExternalLink>();
+            CreateMap<Attachment, SocialLinkDTO>();
+            CreateMap<SocialLinkDTO, Attachment>();
 
             CreateMap<UserDto, User>();
 
