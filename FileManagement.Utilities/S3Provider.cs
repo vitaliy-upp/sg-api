@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace FileManagement.Utilities
 {
-    public class S3Provider : IFileManager
+    public class S3Provider : IFileProvider
     {
-        public async Task<string> UploadFileAsync()
+        public async Task<string> UploadFileAsync(object file)
         {
             throw new NotImplementedException();
         }

@@ -23,7 +23,7 @@ namespace Domain.BusinessLogic.Services
     public class UserService : BaseBusinessService, IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IMediaApplicationService _mediaApplicationService;
+        private readonly IAttachmentService _mediaApplicationService;
         private readonly ISocialLinkRepository _socialLinkRepository;
         private readonly ICompanyRepository _сompanyRepository;
         private readonly IMapper _mapper;
@@ -33,7 +33,7 @@ namespace Domain.BusinessLogic.Services
         public UserService(IHttpContextAccessor httpContextAccessor
             , DataAccess.ServiceInterfaces.IUserRepository userDomainService
             , IConfiguration configuration
-            , IMediaApplicationService mediaApplicationService
+            , IAttachmentService mediaApplicationService
             , ISocialLinkRepository socialLinkRepository
             , IMapper mapper
             , ICompanyRepository companyRepository
@@ -167,7 +167,7 @@ namespace Domain.BusinessLogic.Services
             else
             {
                 // Adding image of new user
-                user.Image = await _mediaApplicationService.UploadMediaAsync(model.Image);
+                user.Image = await _mediaApplicationService.UploadAsync(model.Image);
                 //UpdateImage(dbUser.Id, imageName);
             }
 
@@ -233,7 +233,7 @@ namespace Domain.BusinessLogic.Services
             
             if (regUser.ImageFile != null)
             {
-                user.Image = await _mediaApplicationService.UploadMediaAsync(regUser.ImageFile);
+                user.Image = await _mediaApplicationService.UploadAsync(regUser.ImageFile);
             }
             else
             {

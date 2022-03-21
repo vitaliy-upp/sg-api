@@ -126,7 +126,13 @@ namespace Domain.Repository
         }
 
         public virtual void SaveChanges() => Context.SaveChanges();
-        public virtual async Task SaveChangesAsync() => await Context.SaveChangesAsync();
+        public virtual async Task SaveChangesAsync(bool? shouldBeSaved = true)
+        {
+            if (shouldBeSaved.HasValue && shouldBeSaved.Value)
+            {
+                await Context.SaveChangesAsync();
+            }
+        }
 
     }
 }

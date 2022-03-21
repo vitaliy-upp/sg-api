@@ -43,7 +43,7 @@ namespace WebApi
             services.AddTransient<IChattingApplicationService, ChattingApplicationService>();
             services.AddTransient<IInviteApplicationService, InviteApplicationService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IMediaApplicationService, MediaApplicationService>();
+            services.AddTransient<IAttachmentService, AttachmentService>();
 
             services.AddTransient<IUserTokensApplicationService, UserTokensApplicationService>();
             //services.AddTransient<IStripeApplicationService, StripeApplicationService>();

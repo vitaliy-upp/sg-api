@@ -10,6 +10,7 @@ using System.Linq;
 using Domain.DataAccess.Entities.KidProfile;
 using Domain.DataAccess.Entities.KidProfile.Education;
 using UserManagement.DataAccess.UserManagement.Location;
+using FileManagement.DataAccess;
 
 namespace Domain.DataAccess
 {
@@ -28,13 +29,21 @@ namespace Domain.DataAccess
 
         #endregion
 
+        #region KidProfile
+        public DbSet<KidProfile> KidProfiles { get; set; }
+        public DbSet<SuperPower> SuperPowers { get; set; }
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<PersonalityQuestion> PersonalityQuestions { get; set; }
+        public DbSet<PersonalityAnswer> PersonalityAnswers { get; set; }
+        public DbSet<KidPortfolioItem> KidPortfolioItems { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
+
+        #endregion
+
         public DbSet<Message> ChatMessages { get; set; }
         public DbSet<MessageAttachment> MessageAttachments { get; set; }
         public DbSet<UserCustomer> UserCustomers { get; set; }
         public DbSet<StripeProductInfo> StripeProductsInfo { get; set; }
-        public DbSet<KidProfile> KidProfiles { get; set; }
-        public DbSet<SuperPower> SuperPowers { get; set; }
-        public DbSet<Education> Educations { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -61,13 +70,18 @@ namespace Domain.DataAccess
             builder.ApplyConfiguration(new FeatureConfiguration());
             builder.ApplyConfiguration(new SubscriptionFeatureConfiguration());
             builder.ApplyConfiguration(new SubscriptionPlanConfiguration());
-
+            builder.ApplyConfiguration(new PersonalityQuestionConfiguration());
             #endregion
 
 
-
             #region Relationships
-            
+            builder.Entity<PersonalityAnswer>()
+                .HasKey(p => new { 
+                    p.KidId,
+                    p.QuestionId
+                });
+
+
             builder.Entity<SuperPowerToKid>()
                 .HasKey(p => new
                 {

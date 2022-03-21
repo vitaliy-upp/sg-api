@@ -5,6 +5,6 @@ namespace FileManagement.Utilities
 {
     public interface IFileManager
     {
-        Task<string> UploadFileAsync();
+        Task<string> UploadFileAsync(object file);
     }
 }

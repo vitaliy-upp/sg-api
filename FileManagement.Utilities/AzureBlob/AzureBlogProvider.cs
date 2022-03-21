@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileManagement.Utilities
 {
-    public class AzureBlogProvider : IFileManager
+    public class AzureBlogProvider : IFileProvider
     {
         private readonly BlobStorageSettings _storageConfig;
         public AzureBlogProvider(
@@ -16,7 +16,7 @@ namespace FileManagement.Utilities
             //_storageConfig = configuration.GetSection(nameof(BlobStorageSettings)).Get<BlobStorageSettings>();
         }
 
-        public async Task<string> UploadFileAsync(/*IFormFile file*/)
+        public async Task<string> UploadFileAsync(/*IFormFile file*/object file)
         {
             //string fileName = GenerateName(file.FileName);
             //await UploadFileToStorageAsync(file, fileName, _storageConfig.ImageContainer);

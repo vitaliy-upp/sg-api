@@ -23,4 +23,5 @@ namespace Domain.DataAccess.Services
                 .Where(t => t.ParrentId == parentId).ToListAsync();
         }
     }
+
 }

@@ -19,7 +19,7 @@ namespace Domain.BusinessLogic.Services
     public class KidProfileService : BaseBusinessService, IKidProfileService
     {
         private readonly DataAccess.ServiceInterfaces.IUserRepository _userDomainService;
-        private readonly IMediaApplicationService _mediaApplicationService;
+        private readonly IAttachmentService _mediaApplicationService;
         private readonly ISocialLinkRepository _socialLinkRepository;
         private readonly IKidProfileRepository _kidProfileRepository;
         private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ namespace Domain.BusinessLogic.Services
         public KidProfileService(IHttpContextAccessor httpContextAccessor
             , IUserRepository userDomainService
             , IConfiguration configuration
-            , IMediaApplicationService mediaApplicationService
+            , IAttachmentService mediaApplicationService
             , ISocialLinkRepository socialLinkRepository
             , IMapper mapper
             , ICompanyRepository companyRepository
@@ -46,12 +46,6 @@ namespace Domain.BusinessLogic.Services
 
 
        
-        public KidProfileDto FindById(int id)
-        {
-            var dbUser = _userDomainService.GetByIdAsync(id);
-            return _mapper.Map<KidProfileDto>(dbUser);
-        }
-
 
         public async Task<KidProfileDto> CreateAsync(KidProfileDto dto)
         {
@@ -97,7 +91,7 @@ namespace Domain.BusinessLogic.Services
 
             if (regUser.ImageFile != null)
             { 
-                user.Image = await _mediaApplicationService.UploadMediaAsync(regUser.ImageFile); 
+                user.Image = await _mediaApplicationService.UploadAsync(regUser.ImageFile); 
             }
             else
             { 

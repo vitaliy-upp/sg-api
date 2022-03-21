@@ -5,6 +5,7 @@ using Payment.DataAccess;
 using Domain.DataAccess.Entities.KidProfile;
 using Domain.DataAccess.Entities.KidProfile.Education;
 using UserManagement.DataAccess.UserManagement.Location;
+using FileManagement.DataAccess;
 
 namespace Domain.DataAccess
 {
@@ -14,6 +15,8 @@ namespace Domain.DataAccess
         DbSet<KidProfile> KidProfiles { get; set; }
         DbSet<SuperPower> SuperPowers { get; set; }
         DbSet<Education> Educations { get; set; }
+        DbSet<KidPortfolioItem> KidPortfolioItems { get; set; }
+        DbSet<Attachment> Attachments { get; set; }
         #endregion
 
 

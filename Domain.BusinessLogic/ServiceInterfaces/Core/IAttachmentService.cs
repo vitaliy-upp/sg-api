@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.BusinessLogic.ServiceInterfaces
 {
-    public interface IMediaApplicationService : IBaseBusinessService
+    public interface IAttachmentService : IBaseBusinessService
     {
         /// <summary>
         /// Upload image to the azure blob storage
@@ -14,6 +14,6 @@ namespace Domain.BusinessLogic.ServiceInterfaces
         /// <param name="file"></param>
         /// <param name="storageConfig"></param>
         /// <returns>New name of the file</returns>
-        Task<string> UploadMediaAsync(IFormFile file);
+        Task<string> UploadAsync(IFormFile file);
     }
 }

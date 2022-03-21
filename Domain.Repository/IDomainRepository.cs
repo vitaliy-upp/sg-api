@@ -17,7 +17,7 @@ namespace Domain.Repository
         Task DeleteAsync(TId id);
         Task DeleteAsync(IList<TId> ids);
         Task DeleteAsync(TModel model);
-        Task SaveChangesAsync();
+        Task SaveChangesAsync(bool? shouldBeSaved = true);
 
         Task<IList<TModel>> GetAllAsync();
     }

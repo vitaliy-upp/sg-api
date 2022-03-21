@@ -10,6 +10,6 @@ namespace Domain.DataAccess.Entities.KidProfile
     {
         [Key]
         public int Id { get; set; }
-        public string Question { get; set; }
+        public string Text { get; set; }
     }
 }

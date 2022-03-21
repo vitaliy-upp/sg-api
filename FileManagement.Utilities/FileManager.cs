@@ -4,12 +4,12 @@ namespace FileManagement.Utilities
 {
     public class FileManager: IFileManager
     {
-        private readonly IFileManager _fileManager;
-        public FileManager(IFileManager fileManager) {
+        private readonly IFileProvider _fileManager;
+        public FileManager(IFileProvider fileManager) {
             _fileManager = fileManager;
         }
-        public async Task<string> UploadFileAsync() {
-            var result = await _fileManager.UploadFileAsync();
+        public async Task<string> UploadFileAsync(/*IFormFile file*/object file) {
+            var result = await _fileManager.UploadFileAsync(file);
             return result;
         }
     }

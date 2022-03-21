@@ -2,11 +2,10 @@
 {
     public enum AttachmentTypeEnum : short
     {
-        Photo = 1,
-        Video = 2,
-        Audio = 3,
-        Doc = 4,
-        Link = 5
-
+        KidPhoto = 1,
+        KidVideo = 2,
+        KidAudio = 3,
+        KidDoc = 4,
+        KidLink = 5
     }
 }
