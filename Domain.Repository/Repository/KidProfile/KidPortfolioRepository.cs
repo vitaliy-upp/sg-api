@@ -21,10 +21,15 @@ namespace Domain.DataAccess.Services
             await SaveChangesAsync(shouldBeSaved);
         }
 
-        public async Task<IList<KidPortfolioItem>> GetByKidtId(int kidId)
+        public async Task<IList<KidPortfolioItem>> GetByKidId(int kidId)
         {
             return await Context.Set<KidPortfolioItem>()
                 .Where(t => t.KidId == kidId).ToListAsync();
+        }
+
+        public async Task CreateAsync(KidPortfolioItem item, bool? shouldBeSaved)
+        {
+            throw new System.NotImplementedException();
         }
     }
 

@@ -6,7 +6,9 @@ namespace Domain.DataAccess.Services
 {
     public interface IKidPortfolioRepository
     {
-        Task<IList<KidPortfolioItem>> GetByKidtId(int kidId);
+        Task<IList<KidPortfolioItem>> GetByKidId(int kidId);
         Task DeleteAsync(int kidId, int attachmentId, bool? shouldBeSaved = false);
+        Task CreateAsync(KidPortfolioItem item, bool? shouldBeSaved = false);
+
     }
 }

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using FileManagement.Utilities.AzureBlob;
 using Domain.Repository.Interfaces.KidProfile;
 using FileManagement.Utilities;
+using FileManagement.DataAccess;
 
 namespace Domain.BusinessLogic.Services
 {
@@ -36,10 +37,13 @@ namespace Domain.BusinessLogic.Services
             _fileManager = fileManager;
         }
 
-        public async Task<string> UploadAsync(IFormFile file)
+        public async Task<AttachmentDto> UploadAsync(AttachmentDto dto, bool shouldBeSaved = true)
         {
-            var url = await _fileManager.UploadFileAsync(file);
-            return "";
+            var url = await _fileManager.UploadFileAsync(dto.File);
+            dto.Url = url;
+            var model = _mapper.Map<Attachment>(dto);
+            var result = await _repository.CreateAsync(model, shouldBeSaved);
+            return _mapper.Map<AttachmentDto>(result);
         }
     }
 }

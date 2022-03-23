@@ -89,14 +89,14 @@ namespace Domain.BusinessLogic.Services
         private async Task<UserDto> CreateAsync(User user, RegistrationModel regUser)
         {
 
-            if (regUser.ImageFile != null)
-            { 
-                user.Image = await _mediaApplicationService.UploadAsync(regUser.ImageFile); 
-            }
-            else
-            { 
-                user.Image = ""; 
-            }
+            //if (regUser.ImageFile != null)
+            //{ 
+            //    user.Image = await _mediaApplicationService.UploadAsync(regUser.ImageFile); 
+            //}
+            //else
+            //{ 
+            //    user.Image = ""; 
+            //}
 
             return null;
         }

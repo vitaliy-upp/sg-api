@@ -10,7 +10,6 @@ namespace Domain.BusinessLogic.Models
         public IList<AttachmentDto> Videos { get; set; }
 
         public IList<AttachmentDto> Audio { get; set; }
-
         public IList<AttachmentDto> Docs { get; set; }
         public IList<AttachmentDto> Links { get; set; }
 

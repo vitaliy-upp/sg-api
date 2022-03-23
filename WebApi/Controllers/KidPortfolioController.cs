@@ -6,11 +6,8 @@ using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using System.Security.Claims;
-using Domain.BusinessLogic.Extensions;
-using System.Collections.Generic;
 
-namespace NoLimitTech.WebApi.Controllers
+namespace WebApi.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -37,7 +34,7 @@ namespace NoLimitTech.WebApi.Controllers
         /// <returns>Kid portfolio Model</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(KidPortfolioDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get([FromRoute]int id)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
             var result = await _service.GetAsync(id);
             return Ok(result);

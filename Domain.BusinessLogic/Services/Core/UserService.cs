@@ -86,11 +86,6 @@ namespace Domain.BusinessLogic.Services
                 throw new Exception("Invalid login or password");
             }
 
-            if (!dbUser.IsEmailVerified)
-            {
-                throw new Exception("Please verify your email");
-            }
-
             var isValid = VerifyPassword(dbUser, dbUser.Password, password);
             if (!isValid)
             {
@@ -160,16 +155,16 @@ namespace Domain.BusinessLogic.Services
             user.IsEmailVerified = true;
             user.CompanyId = dbUser.CompanyId;
 
-            if (model.Image == null)
-            {
-                user.Image = dbUser.Image;
-            }
-            else
-            {
-                // Adding image of new user
-                user.Image = await _mediaApplicationService.UploadAsync(model.Image);
-                //UpdateImage(dbUser.Id, imageName);
-            }
+            //if (model.Image == null)
+            //{
+            //    user.Image = dbUser.Image;
+            //}
+            //else
+            //{
+            //    // Adding image of new user
+            //    user.Image = await _mediaApplicationService.UploadAsync(model.Image);
+            //    //UpdateImage(dbUser.Id, imageName);
+            //}
 
             UpdateCompany(user, model);
 
@@ -215,6 +210,16 @@ namespace Domain.BusinessLogic.Services
         //    return _userDomainService.CheckEmailAvailabilityAsync(CurrentUserEmail);
         //}
 
+        public async Task<bool> CheckEmailVerification(string email)
+        {
+            var dbUser = await _userRepository.GetByEmailAsync(email);
+            if (!dbUser.IsEmailVerified)
+            {
+                throw new Exception("Email is not verified.");
+            }
+
+            return true;
+        }
 
         #region private methods
 
@@ -230,15 +235,15 @@ namespace Domain.BusinessLogic.Services
             // Getting a hash of password
             var passwdHash = HashPassword(user, regUser.Password);
             user.Password = passwdHash;
-            
-            if (regUser.ImageFile != null)
-            {
-                user.Image = await _mediaApplicationService.UploadAsync(regUser.ImageFile);
-            }
-            else
-            {
-                user.Image = "";
-            }
+
+            //if (regUser.ImageFile != null)
+            //{
+            //    user.Image = await _mediaApplicationService.UploadAsync(regUser.ImageFile);
+            //}
+            //else
+            //{
+            //    user.Image = "";
+            //}
 
             //if (!string.IsNullOrEmpty(regUser.CompanyName))
             //{
@@ -255,9 +260,10 @@ namespace Domain.BusinessLogic.Services
             {
                 user.UserRoles = new List<UserRoles>();
             }
-            user.UserRoles.Add(new UserRoles() { 
+            user.UserRoles.Add(new UserRoles()
+            {
                 User = user,
-                RoleId = (int) UserRolesEnum.User
+                RoleId = (int)UserRolesEnum.User
             });
             var result = await _userRepository.CreateAsync(user, true);
             return _mapper.Map<UserDto>(result);

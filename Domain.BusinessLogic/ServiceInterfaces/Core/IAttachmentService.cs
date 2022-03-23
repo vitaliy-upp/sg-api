@@ -14,6 +14,6 @@ namespace Domain.BusinessLogic.ServiceInterfaces
         /// <param name="file"></param>
         /// <param name="storageConfig"></param>
         /// <returns>New name of the file</returns>
-        Task<string> UploadAsync(IFormFile file);
+        Task<AttachmentDto> UploadAsync(AttachmentDto dto, bool shouldBeSaved = true);
     }
 }
