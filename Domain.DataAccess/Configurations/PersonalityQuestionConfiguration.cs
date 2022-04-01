@@ -9,11 +9,11 @@ namespace Domain.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<PersonalityQuestion> builder)
         {
-            builder.HasData(
-                new PersonalityQuestion { Id = 1, Text = "What is your dream vacation?"},
-                new PersonalityQuestion { Id = 2, Text = "If you could have a super power, what would it be?" },
-                new PersonalityQuestion { Id = 2, Text = "What are you dreaming about?" }
-                );
+            //builder.HasData(
+            //    new PersonalityQuestion { Id = 1, Text = "What is your dream vacation?"},
+            //    new PersonalityQuestion { Id = 2, Text = "If you could have a super power, what would it be?" },
+            //    new PersonalityQuestion { Id = 2, Text = "What are you dreaming about?" }
+            //    );
         }
     }
 }

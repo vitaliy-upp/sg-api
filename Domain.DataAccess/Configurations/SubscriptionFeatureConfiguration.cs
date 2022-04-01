@@ -8,8 +8,8 @@ namespace Domain.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<SubscriptionFeature> builder)
         {
-            builder.HasData(
-                new SubscriptionFeature { Id = 1, FeatureId = 1, NumberValue = 100, SubscriptionPlanId = 1 });
+            //builder.HasData(
+            //    new SubscriptionFeature { Id = 1, FeatureId = 1, NumberValue = 100, SubscriptionPlanId = 1 });
         }
     }
 }

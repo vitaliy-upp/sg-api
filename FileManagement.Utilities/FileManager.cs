@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace FileManagement.Utilities
 {
@@ -8,7 +9,7 @@ namespace FileManagement.Utilities
         public FileManager(IFileProvider fileManager) {
             _fileManager = fileManager;
         }
-        public async Task<string> UploadFileAsync(/*IFormFile file*/object file) {
+        public async Task<string> UploadFileAsync(IFormFile file) {
             var result = await _fileManager.UploadFileAsync(file);
             return result;
         }

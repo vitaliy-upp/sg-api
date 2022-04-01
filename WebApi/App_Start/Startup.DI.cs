@@ -10,6 +10,7 @@ using MailSender.Interfaces;
 using MailSender.Services;
 using Domain.Repository.Interfaces.KidProfile;
 using Domain.Repository.Repository.KidProfile;
+using FileManagement.Utilities;
 
 namespace WebApi
 {
@@ -52,6 +53,7 @@ namespace WebApi
             services.AddTransient<IKidProfileService, KidProfileService>();
             services.AddTransient<ISuperPowerService, SuperPowerService>();
             services.AddTransient<IKidEducationService, KidEducationService>();
+            services.AddTransient<IKidProfileService, KidProfileService>();
 
 
             // Email service
@@ -60,6 +62,13 @@ namespace WebApi
 
             // Factories
             services.AddSingleton<IStripeEventHandlerFacroty, StripeEventHandlerFacroty>();
+
+            #region FileManagement 
+            services.AddTransient<IFileManager, FileManager> ();
+            services.AddTransient<IAttachmentService, AttachmentService>();
+            services.AddTransient<IFileProvider, S3Provider>();
+            #endregion
+
         }
     }
 }

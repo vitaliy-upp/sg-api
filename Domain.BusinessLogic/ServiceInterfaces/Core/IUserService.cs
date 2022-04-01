@@ -98,5 +98,8 @@ namespace Domain.BusinessLogic.ServiceInterfaces
         /// <param name="userId"></param>
         /// <param name="imageName"></param>
         Task UpdateImageAsync(int userId, string imageName);
+
+
+        Task<bool> CheckEmailVerification(string email);
     }
 }

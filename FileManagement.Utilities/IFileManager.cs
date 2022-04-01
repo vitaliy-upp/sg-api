@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Threading.Tasks;
 
 namespace FileManagement.Utilities
 {
     public interface IFileManager
     {
-        Task<string> UploadFileAsync(object file);
+        Task<string> UploadFileAsync(IFormFile file);
     }
 }
