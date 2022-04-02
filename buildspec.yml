@@ -1,15 +1,28 @@
-version 0.2
-phases
-  pre_build
-    commands
+version: 0.2
+    
+phases:   
+  install:
+    runtime-versions:
+      dotnet: latest
+      
+  pre_build:
+    commands:
       - echo Restore started on `date`
       - dotnet restore WebApi\WebApi.csproj
-  build
-    commands
+      
+  build:
+    commands:
       - echo Build started on `date`
-      - dotnet publish -c release -o .build_output WebApi\WebApi.csproj
-artifacts
-  files
-    - CodeBuild-SampleCorebuild_output
-    - scripts
-    - appspec.yml
+      - dotnet build WebApi\WebApi.csproj
+      
+  post_build:
+    commands:
+      - echo Publish started on `date`
+      # https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/dotnet-linux-platform-bundle-app.html
+      - dotnet publish -c Release -r linux-x64 --self-contained false WebApi\WebApi.csproj
+      
+artifacts:
+  files:
+    - '**/*'
+  base-directory: ./bin/Release/netcoreapp3.1/linux-x64/publish/
+  discard-paths: no
