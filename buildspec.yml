@@ -24,5 +24,4 @@ phases:
 artifacts:
   files:
     - '**/*'
-  base-directory: ./sg-production/
   discard-paths: no
