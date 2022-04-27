@@ -1,10 +1,6 @@
 version: 0.2
-    
+os: windows
 phases:   
-  install:
-    runtime-versions:
-      dotnet: latest
-      
   pre_build:
     commands:
       - echo Restore started on `date`
@@ -19,7 +15,7 @@ phases:
     commands:
       - echo Publish started on `date`
       # https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/dotnet-linux-platform-bundle-app.html
-      - dotnet publish -c Release -r linux-x64 --self-contained false ./WebApi/WebApi.csproj
+      - dotnet publish -c Release -r windows-x64 --self-contained false ./WebApi/WebApi.csproj
       
 artifacts:
   files:
